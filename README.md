@@ -1,4 +1,3 @@
-# ToDo-Console-App
 # ToDo List Console App
 
 A fun, easy-to-use, and colorful console-based ToDo List Manager application written in C#. The application allows users to create, edit, delete, and complete tasks, as well as manage multiple task lists.
