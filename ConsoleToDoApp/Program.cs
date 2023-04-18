@@ -6,7 +6,10 @@ namespace ConsoleToDoApp
 {
     class Program
     {
-        static List<Task> tasks = new List<Task>();
+        static Dictionary<string, List<Task>> taskLists = new Dictionary<string, List<Task>>();
+        static List<Task> tasks;
+        static string currentList = "default";
+
 
         static ConsoleColor titleColor = ConsoleColor.Cyan;
         static ConsoleColor urgentColor = ConsoleColor.Red;
@@ -18,6 +21,9 @@ namespace ConsoleToDoApp
         static void Main(string[] args)
         {
             ShowWelcomeScreen();
+
+            LoadTasksFromFile();
+
             while (true)
             {
                 ShowMainMenu();
@@ -39,6 +45,10 @@ namespace ConsoleToDoApp
                     case 's':
                         SortTasks();
                         break;
+                    case 'l':
+                        SwitchList();
+                        break;
+
                     case 'q':
                         return;
                     default:
@@ -155,6 +165,11 @@ namespace ConsoleToDoApp
             Console.Write("'s'");
             Console.ForegroundColor = commandDescriptionColor;
             Console.WriteLine(" - Sort tasks");
+
+            Console.ForegroundColor = commandKeyColor;
+            Console.Write("'l'");
+            Console.ForegroundColor = commandDescriptionColor;
+            Console.WriteLine(" - Switch or create list");
 
             Console.ForegroundColor = commandKeyColor;
             Console.Write("'q'");
@@ -453,11 +468,55 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
+        static void SwitchList()
+        {
+            Console.Clear();
+            Console.WriteLine("Switch or create task list:\n");
+            Console.Write("Enter the name of the list you want to switch to or create (type 'cancel' to cancel): ");
+            string newList = Console.ReadLine();
+
+            if (newList.ToLower() == "cancel")
+            {
+                Console.WriteLine("Switching list canceled.");
+            }
+            else
+            {
+                currentList = newList;
+                if (taskLists.ContainsKey(currentList))
+                {
+                    tasks = taskLists[currentList];
+                    Console.WriteLine($"Switched to list '{currentList}'.");
+                }
+                else
+                {
+                    tasks = new List<Task>();
+                    taskLists[currentList] = tasks;
+                    Console.WriteLine($"Created and switched to list '{currentList}'.");
+                }
+            }
+
+            Console.WriteLine("Press any key to return to the main menu.");
+            Console.ReadKey();
+        }
+
+
+        static void LoadTasksFromFile()
+        {
+            if (File.Exists("taskLists.json"))
+            {
+                string json = File.ReadAllText("tasks.json");
+                taskLists = JsonConvert.DeserializeObject<Dictionary<string, List<Task>>>(json);
+            }
+            tasks = taskLists.ContainsKey(currentList) ? taskLists[currentList] : new List<Task>();
+        }
+
         static void SaveTasksToFile()
         {
-            string json = JsonConvert.SerializeObject(tasks);
+            taskLists[currentList] = tasks;
+            string json = JsonConvert.SerializeObject(taskLists);
             File.WriteAllText("tasks.json", json);
         }
+
 
     }
 }
