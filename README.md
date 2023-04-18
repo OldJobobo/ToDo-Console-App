@@ -26,7 +26,7 @@ The application provides a simple text-based interface with the following comman
 - `d` - Delete a task
 - `c` - Mark a task as complete
 - `s` - Sort tasks
-- `l` - Switch or create task list
+- `l` - Show a list of task lists and switch or create a list
 - `q` - Quit
 
 When prompted, enter the corresponding letter key for the desired command and follow the on-screen instructions.
