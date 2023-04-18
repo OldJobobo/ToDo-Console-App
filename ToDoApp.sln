@@ -5,6 +5,15 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleToDoApp", "ConsoleToDoApp\ConsoleToDoApp.csproj", "{B0CAE0E9-F947-42A6-B9B3-BB7BD38B87D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{85B4A45E-4904-425C-A47B-933071A5527B}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+		ConsoleToDoApp\bin\Debug\net7.0\tasks.json = ConsoleToDoApp\bin\Debug\net7.0\tasks.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

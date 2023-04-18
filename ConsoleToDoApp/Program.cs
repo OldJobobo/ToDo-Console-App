@@ -48,7 +48,9 @@ namespace ConsoleToDoApp
                     case 'l':
                         SwitchList();
                         break;
-
+                    case 'x': 
+                        DeleteTaskList();
+                        break;
                     case 'q':
                         return;
                     default:
@@ -79,17 +81,22 @@ namespace ConsoleToDoApp
             Console.ReadLine();
         }
 
-
-        static void ShowMainMenu()
+        static void ShowTasks()
         {
-            Console.Clear();
+           
 
-            
-            Console.ForegroundColor = titleColor;
-            Console.WriteLine("ToDo List Manager - Main Menu\n");
+            // Display colorful title with current task list information
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Current Task List: ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write(currentList);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($" ({tasks.Count} tasks)");
             Console.ResetColor();
 
-            Console.WriteLine("Tasks:\n");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("\nTasks:\n");
+            Console.ResetColor();
 
             if (tasks.Count == 0)
             {
@@ -124,20 +131,40 @@ namespace ConsoleToDoApp
                         taskColor = completedColor;
                     }
 
-                    Console.Write($"{i + 1}. {taskStatus} ");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write($"{i + 1}. ");
+                    Console.ResetColor();
+                    Console.Write($"{taskStatus} ");
                     Console.ForegroundColor = taskColor;
                     Console.Write(task.Name);
                     Console.ResetColor();
-                    Console.WriteLine($" - Due: {task.DueDate.ToShortDateString()}");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(" - Due: ");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"{task.DueDate.ToShortDateString()}");
+                    Console.ResetColor();
                 }
                 Console.WriteLine();
             }
+        }
 
-          
+
+        static void ShowMainMenu()
+        {
+            Console.Clear();
+
+            DrawTitleBar();
+
+            Console.ForegroundColor = titleColor;
+            Console.WriteLine("ToDo List Manager - Main Menu\n");
+            Console.ResetColor();
+
+
+            ShowTasks();
 
             ConsoleColor commandKeyColor = ConsoleColor.Yellow;
             ConsoleColor commandDescriptionColor = ConsoleColor.Green;
-
+            /*
             Console.ForegroundColor = commandsColor;
             Console.WriteLine("Commands:");
 
@@ -169,7 +196,12 @@ namespace ConsoleToDoApp
             Console.ForegroundColor = commandKeyColor;
             Console.Write("'l'");
             Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Switch or create list");
+            Console.WriteLine(" - Switch or create task list");
+
+            Console.ForegroundColor = commandKeyColor;
+            Console.Write("'x'");
+            Console.ForegroundColor = commandDescriptionColor;
+            Console.WriteLine(" - Delete a task list");
 
             Console.ForegroundColor = commandKeyColor;
             Console.Write("'q'");
@@ -179,10 +211,60 @@ namespace ConsoleToDoApp
             
             Console.ForegroundColor = normalColor;
             Console.WriteLine("\nPress the corresponding key for the command you'd like to execute.");
+            */
+
+            Console.ResetColor();
+            
+            DisplayStatusBar();
+        }
+
+        static void DrawTitleBar()
+        {
+            int windowWidth = Console.WindowWidth;
+            Console.SetCursorPosition(0, 0);
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+
+            string title = " ToDo List Manager ";
+            int titleStart = (windowWidth - title.Length) / 2;
+            int paddingLeft = titleStart - 1;
+            int paddingRight = windowWidth - title.Length - paddingLeft - 2;
+
+            Console.Write(" " + new string(' ', paddingLeft));
+            Console.Write(title);
+            Console.Write(new string(' ', paddingRight) + " ");
 
             Console.ResetColor();
         }
 
+
+
+        static void DisplayStatusBar()
+        {
+            int currentCursorPosition = Console.CursorTop;
+
+            // Calculate the position of the status bar
+            int statusBarTop = Console.WindowHeight - 1;
+            Console.SetCursorPosition(0, statusBarTop);
+
+            // Clear the status bar area
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, statusBarTop);
+
+            // Write the status bar content
+            ConsoleColor commandKeyColor = ConsoleColor.Yellow;
+            ConsoleColor commandDescriptionColor = ConsoleColor.Green;
+
+            Console.ForegroundColor = commandKeyColor;
+            Console.Write("Commands: ");
+            Console.ForegroundColor = commandDescriptionColor;
+            Console.Write("a - Add, e - Edit, d - Delete, c - Complete, s - Sort, l - Switch List, x - Delete List, q - Quit");
+
+            // Restore the original cursor position
+            Console.SetCursorPosition(0, currentCursorPosition);
+            Console.ResetColor();
+        }
 
 
         static void AddTask()
@@ -471,26 +553,40 @@ namespace ConsoleToDoApp
         static void SwitchList()
         {
             Console.Clear();
-            Console.WriteLine("Available task lists:");
+            Console.WriteLine("Available task lists:\n");
 
             int listIndex = 1;
+            List<string> listNames = new List<string>();
             foreach (string listName in taskLists.Keys)
             {
-                Console.WriteLine($"{listIndex}. {listName}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{listIndex}. ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(listName);
+                Console.ResetColor();
+                listNames.Add(listName);
                 listIndex++;
             }
 
             Console.WriteLine("\nSwitch or create task list:\n");
-            Console.Write("Enter the name of the list you want to switch to or create (type 'cancel' to cancel): ");
-            string newList = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Enter the index number of the list you want to switch to, or type a new name to create a list (type 'cancel' to cancel): ");
+            Console.ResetColor();
+            string input = Console.ReadLine();
 
-            if (newList.ToLower() == "cancel")
+            if (input.ToLower() == "cancel")
             {
                 Console.WriteLine("Switching list canceled.");
             }
+            else if (int.TryParse(input, out int selectedIndex) && selectedIndex > 0 && selectedIndex <= listNames.Count)
+            {
+                currentList = listNames[selectedIndex - 1];
+                tasks = taskLists[currentList];
+                Console.WriteLine($"Switched to list '{currentList}'.");
+            }
             else
             {
-                currentList = newList;
+                currentList = input;
                 if (taskLists.ContainsKey(currentList))
                 {
                     tasks = taskLists[currentList];
@@ -508,11 +604,64 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
+        static void DeleteTaskList()
+        {
+            Console.Clear();
+            Console.WriteLine("Delete task list:\n");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Enter the name of the task list you want to delete (type 'cancel' to cancel): ");
+            Console.ResetColor();
+            string listToDelete = Console.ReadLine();
+
+            if (listToDelete.ToLower() == "cancel")
+            {
+                Console.WriteLine("Task list deletion canceled.");
+            }
+            else if (taskLists.ContainsKey(listToDelete))
+            {
+                if (listToDelete == currentList)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Cannot delete the currently active task list. Switch to another list before deleting this one.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"Are you sure you want to delete the task list '{listToDelete}'? This action cannot be undone. (y/n): ");
+                    Console.ResetColor();
+                    char confirmation = char.ToLower(Console.ReadKey().KeyChar);
+                    Console.WriteLine();
+
+                    if (confirmation == 'y')
+                    {
+                        taskLists.Remove(listToDelete);
+                        Console.WriteLine($"Task list '{listToDelete}' has been deleted.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Task list deletion canceled.");
+                    }
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Task list '{listToDelete}' not found.");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("Press any key to return to the main menu.");
+            Console.ReadKey();
+        }
+
+
+
 
 
         static void LoadTasksFromFile()
         {
-            if (File.Exists("taskLists.json"))
+            if (File.Exists("tasks.json"))
             {
                 string json = File.ReadAllText("tasks.json");
                 taskLists = JsonConvert.DeserializeObject<Dictionary<string, List<Task>>>(json);
