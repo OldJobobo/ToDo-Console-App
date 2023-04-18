@@ -164,54 +164,7 @@ namespace ConsoleToDoApp
 
             ConsoleColor commandKeyColor = ConsoleColor.Yellow;
             ConsoleColor commandDescriptionColor = ConsoleColor.Green;
-            /*
-            Console.ForegroundColor = commandsColor;
-            Console.WriteLine("Commands:");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'a'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Add a task");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'e'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Edit a task");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'d'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Delete a task");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'c'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Mark a task as complete");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'s'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Sort tasks");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'l'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Switch or create task list");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'x'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Delete a task list");
-
-            Console.ForegroundColor = commandKeyColor;
-            Console.Write("'q'");
-            Console.ForegroundColor = commandDescriptionColor;
-            Console.WriteLine(" - Quit");
-
-            
-            Console.ForegroundColor = normalColor;
-            Console.WriteLine("\nPress the corresponding key for the command you'd like to execute.");
-            */
+           
 
             Console.ResetColor();
             
