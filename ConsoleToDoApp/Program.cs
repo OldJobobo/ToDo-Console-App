@@ -176,9 +176,9 @@ namespace ConsoleToDoApp
             int windowWidth = Console.WindowWidth;
             Console.SetCursorPosition(0, 0);
             Console.BackgroundColor = ConsoleColor.Green;
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.ForegroundColor = ConsoleColor.Black;
 
-            string title = " ToDo List Manager ";
+            string title = " InstaTick - ToDo List Manager ";
             int titleStart = (windowWidth - title.Length) / 2;
             int paddingLeft = titleStart - 1;
             int paddingRight = windowWidth - title.Length - paddingLeft - 2;
