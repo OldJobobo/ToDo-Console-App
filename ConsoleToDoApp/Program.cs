@@ -223,7 +223,7 @@ namespace ConsoleToDoApp
             };
 
             tasks.Add(newTask);
-
+            SaveTasksToFile();
             Console.WriteLine("\nTask added successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
@@ -301,7 +301,7 @@ namespace ConsoleToDoApp
                 Console.WriteLine("Invalid date format. Please try again.");
             }
             selectedTask.DueDate = dueDate;
-
+            SaveTasksToFile();
             Console.WriteLine("\nTask updated successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
@@ -343,6 +343,7 @@ namespace ConsoleToDoApp
             if (confirmation == 'y')
             {
                 tasks.RemoveAt(taskIndex);
+                SaveTasksToFile();
                 Console.WriteLine("Task deleted successfully!");
             }
             else
@@ -389,6 +390,7 @@ namespace ConsoleToDoApp
             else
             {
                 selectedTask.IsComplete = true;
+                SaveTasksToFile();
                 Console.WriteLine("Task marked as complete!");
             }
 
@@ -451,6 +453,11 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
+        static void SaveTasksToFile()
+        {
+            string json = JsonConvert.SerializeObject(tasks);
+            File.WriteAllText("tasks.json", json);
+        }
 
     }
 }
