@@ -471,7 +471,16 @@ namespace ConsoleToDoApp
         static void SwitchList()
         {
             Console.Clear();
-            Console.WriteLine("Switch or create task list:\n");
+            Console.WriteLine("Available task lists:");
+
+            int listIndex = 1;
+            foreach (string listName in taskLists.Keys)
+            {
+                Console.WriteLine($"{listIndex}. {listName}");
+                listIndex++;
+            }
+
+            Console.WriteLine("\nSwitch or create task list:\n");
             Console.Write("Enter the name of the list you want to switch to or create (type 'cancel' to cancel): ");
             string newList = Console.ReadLine();
 
@@ -498,6 +507,7 @@ namespace ConsoleToDoApp
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
         }
+
 
 
         static void LoadTasksFromFile()
