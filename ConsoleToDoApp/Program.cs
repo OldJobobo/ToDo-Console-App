@@ -156,11 +156,12 @@ namespace ConsoleToDoApp
             DrawTitleBar();
 
             Console.ForegroundColor = titleColor;
-            Console.WriteLine("ToDo List Manager - Main Menu\n");
+            //Console.WriteLine("ToDo List Manager - Main Menu\n");
             Console.ResetColor();
 
 
             ShowTasks();
+            ShowTasksDueToday();
 
             ConsoleColor commandKeyColor = ConsoleColor.Yellow;
             ConsoleColor commandDescriptionColor = ConsoleColor.Green;
@@ -223,11 +224,28 @@ namespace ConsoleToDoApp
         static void AddTask()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Add a new task:\n");
 
-            Console.Write("Task name: ");
-            string taskName = Console.ReadLine();
+            string taskName;
+            while (true)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("Task name: ");
+                taskName = Console.ReadLine();
 
+                if (string.IsNullOrEmpty(taskName)) // Check if the task name is empty or consists only of whitespace
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Task name cannot be blank. Press any key to return to the main menu.");
+                   
+                }
+                else
+                {
+                    Console.ResetColor();
+                    break;
+                }
+            }
             TaskCategory taskCategory;
             while (true)
             {
@@ -276,6 +294,7 @@ namespace ConsoleToDoApp
             SaveTasksToFile();
             Console.WriteLine("\nTask added successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
+            Console.ResetColor();
             Console.ReadKey();
         }
 
@@ -608,6 +627,35 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
+        private static List<Task> GetTasksDueToday()
+        {
+            DateTime today = DateTime.Today;
+            return tasks.Where(task => task.DueDate.Date == today).ToList();
+        }
+
+        private static void ShowTasksDueToday()
+        {
+            List<Task> tasksDueToday = GetTasksDueToday();
+            int windowWidth = Console.WindowWidth;
+            int windowHeight = Console.WindowHeight;
+
+            int columnWidth = 20; // Set the width of the right column
+            int columnStart = windowWidth - columnWidth - 1;
+            int lineStart = 2; // Adjust this value based on the position of the title bar
+
+            Console.SetCursorPosition(columnStart, lineStart);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Tasks Due Today:");
+            Console.ResetColor();
+
+            foreach (Task task in tasksDueToday)
+            {
+                Console.SetCursorPosition(columnStart, ++lineStart);
+                Console.ForegroundColor = task.IsComplete ? completedColor : normalColor;
+                Console.WriteLine(task.Name);
+                Console.ResetColor();
+            }
+        }
 
 
 
