@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+
 namespace ConsoleToDoApp
 {
     public class TaskManager
@@ -260,6 +261,29 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
-       
+        public void AddSubtask()
+        {
+            Console.Clear();
+            TaskListManager.ShowTasks();
+
+            Console.Write("Enter the task number to add a subtask: ");
+            int taskNumber = int.Parse(Console.ReadLine()) - 1;
+            if (taskNumber < 0 || taskNumber >= TaskListManager.tasks.Count)
+            {
+                Console.WriteLine("Invalid task number.");
+                return;
+            }
+
+            Task parentTask = TaskListManager.tasks[taskNumber];
+
+            Console.Write("Enter the subtask name: ");
+            string subtaskName = Console.ReadLine();
+
+            SubTask newSubtask = new SubTask { Name = subtaskName, IsComplete = false };
+            parentTask.SubTasks.Add(newSubtask);
+
+            TaskListManager.SaveTasksToFile();
+        }
+
     }
 }

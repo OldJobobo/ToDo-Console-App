@@ -120,8 +120,6 @@ namespace ConsoleToDoApp
 
         public static void ShowTasks()
         {
-
-
             // Display colorful title with current task list information
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Current Task List: ");
@@ -146,43 +144,94 @@ namespace ConsoleToDoApp
                 for (int i = 0; i < tasks.Count; i++)
                 {
                     Task task = tasks[i];
+                    DisplayTask(task, i);
 
-                    string taskStatus = task.IsComplete ? "[x]" : "[ ]";
-                    ConsoleColor taskColor = ConsoleColor.White;
-
-                    switch (task.Category)
+                    if (task.SubTasks != null && task.SubTasks.Count > 0)
                     {
-                        case TaskCategory.Urgent:
-                            taskColor = ColorScheme.urgentColor;
-                            break;
-                        case TaskCategory.Important:
-                            taskColor = ColorScheme.importantColor;
-                            break;
-                        case TaskCategory.Normal:
-                            taskColor = ColorScheme.normalColor;
-                            break;
+                        for (int j = 0; j < task.SubTasks.Count; j++)
+                        {
+                            SubTask subTask = task.SubTasks[j];
+                            Console.Write("    ");
+                            DisplaySubTask(subTask, j);
+                        }
                     }
-
-                    if (task.IsComplete)
-                    {
-                        taskColor = ColorScheme.completedColor;
-                    }
-
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write($"{i + 1}. ");
-                    Console.ResetColor();
-                    Console.Write($"{taskStatus} ");
-                    Console.ForegroundColor = taskColor;
-                    Console.Write(task.Name);
-                    Console.ResetColor();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(" - Due: ");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"{task.DueDate.ToShortDateString()}");
-                    Console.ResetColor();
                 }
                 Console.WriteLine();
             }
+        }
+
+        private static void DisplayTask(Task task, int index)
+        {
+            string taskStatus = task.IsComplete ? "[x]" : "[ ]";
+            ConsoleColor taskColor = ConsoleColor.White;
+
+            switch (task.Category)
+            {
+                case TaskCategory.Urgent:
+                    taskColor = ColorScheme.urgentColor;
+                    break;
+                case TaskCategory.Important:
+                    taskColor = ColorScheme.importantColor;
+                    break;
+                case TaskCategory.Normal:
+                    taskColor = ColorScheme.normalColor;
+                    break;
+            }
+
+            if (task.IsComplete)
+            {
+                taskColor = ColorScheme.completedColor;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"{index + 1}. ");
+            Console.ResetColor();
+            Console.Write($"{taskStatus} ");
+            Console.ForegroundColor = taskColor;
+            Console.Write(task.Name);
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(" - Due: ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{task.DueDate.ToShortDateString()}");
+            Console.ResetColor();
+        }
+
+        private static void DisplaySubTask(SubTask subtask, int index)
+        {
+            string taskStatus = subtask.IsComplete ? "[x]" : "[ ]";
+            ConsoleColor taskColor = ConsoleColor.White;
+
+            switch (subtask.Category)
+            {
+                case TaskCategory.Urgent:
+                    taskColor = ColorScheme.urgentColor;
+                    break;
+                case TaskCategory.Important:
+                    taskColor = ColorScheme.importantColor;
+                    break;
+                case TaskCategory.Normal:
+                    taskColor = ColorScheme.normalColor;
+                    break;
+            }
+
+            if (subtask.IsComplete)
+            {
+                taskColor = ColorScheme.completedColor;
+            }
+
+            char indexLetter = (char)('a' + index);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"{indexLetter}. ");
+            Console.ResetColor();
+            Console.Write($"{taskStatus} ");
+            Console.ForegroundColor = taskColor;
+            Console.Write(subtask.Name);
+            Console.ResetColor();
+            Console.WriteLine();
+            
+            
+            
         }
 
         public static void LoadTasksFromFile()

@@ -27,6 +27,7 @@ namespace ConsoleToDoApp
                     case 'a':
                         taskManager.AddTask();
                         break;
+                  
                     case 'e':
                         taskManager.EditTask();
                         break;
@@ -35,6 +36,9 @@ namespace ConsoleToDoApp
                         break;
                     case 'c':
                         taskManager.CompleteTask();
+                        break;
+                    case 'u':
+                        taskManager.AddSubtask();
                         break;
                     case 's':
                         SortTasks();
@@ -147,7 +151,7 @@ namespace ConsoleToDoApp
             Console.ForegroundColor = ColorScheme.statusBarKeyColor;
             Console.Write("Commands: ");
             Console.ForegroundColor = ColorScheme.statusBarDescColor;
-            Console.Write("a - Add, e - Edit, d - Delete, c - Complete, s - Sort, l - Switch List, x - Delete List, q - Quit");
+            Console.Write("a-Add, e-Edit, d-Delete, c-Complete, u-SubTask, s-Sort, l-Switch List, x-Delete List, q-Quit");
 
             // Restore the original cursor position
             Console.SetCursorPosition(0, currentCursorPosition);
