@@ -101,12 +101,13 @@ namespace ConsoleToDoApp
             DisplayStatusBar();
         }
 
+
         static void DrawTitleBar()
         {
             int windowWidth = Console.WindowWidth;
             Console.SetCursorPosition(0, 0);
-            Console.BackgroundColor = ConsoleColor.Green;
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ColorScheme.titleBarColor;
+            Console.ForegroundColor = ColorScheme.titleBarTextColor;
 
             string title = " InstaTick - ToDo List Manager ";
             int titleStart = (windowWidth - title.Length) / 2;
@@ -115,10 +116,17 @@ namespace ConsoleToDoApp
 
             Console.Write(" " + new string(' ', paddingLeft));
             Console.Write(title);
-            Console.Write(new string(' ', paddingRight) + " ");
+
+            string dateTimeText = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
+            paddingRight -= (dateTimeText.Length);
+            Console.Write(new string(' ', paddingRight));
+
+            
+            Console.Write(dateTimeText + " ");
 
             Console.ResetColor();
         }
+
 
 
 
@@ -131,17 +139,14 @@ namespace ConsoleToDoApp
             Console.SetCursorPosition(0, statusBarTop);
 
             // Clear the status bar area
-            Console.BackgroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ColorScheme.statusBarColor;
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, statusBarTop);
 
             // Write the status bar content
-            ConsoleColor commandKeyColor = ConsoleColor.Yellow;
-            ConsoleColor commandDescriptionColor = ConsoleColor.Green;
-
-            Console.ForegroundColor = commandKeyColor;
+            Console.ForegroundColor = ColorScheme.statusBarKeyColor;
             Console.Write("Commands: ");
-            Console.ForegroundColor = commandDescriptionColor;
+            Console.ForegroundColor = ColorScheme.statusBarDescColor;
             Console.Write("a - Add, e - Edit, d - Delete, c - Complete, s - Sort, l - Switch List, x - Delete List, q - Quit");
 
             // Restore the original cursor position
