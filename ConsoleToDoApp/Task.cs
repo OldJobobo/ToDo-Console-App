@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ConsoleToDoApp
 {
-    enum TaskCategory
+    public enum TaskCategory
     {
         Normal,
         Important,
         Urgent
     }
 
-    class Task
+    public class Task
     {
         public string Name { get; set; }
         public TaskCategory Category { get; set; }
