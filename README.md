@@ -25,11 +25,25 @@ The application provides a simple text-based interface with the following comman
 - `e` - Edit a task
 - `d` - Delete a task
 - `c` - Mark a task as complete
+- 'u' - Add Subtask
 - `s` - Sort tasks
 - `l` - Show a list of task lists and switch or create a list
 - `q` - Quit
 
 When prompted, enter the corresponding letter key for the desired command and follow the on-screen instructions.
+
+## To Do
+
+- [x] Add support for task subtasks
+- [x] Add support for task priorities
+- [ ] Add support for recurring tasks
+- [ ] Add support for task reminders
+- [ ] Add support for task tags
+
+
+
+
+
 
 ## Contributing
 
