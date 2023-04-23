@@ -25,7 +25,7 @@ The application provides a simple text-based interface with the following comman
 - `e` - Edit a task
 - `d` - Delete a task
 - `c` - Mark a task as complete
-- 'u' - Add Subtask
+- `u` - Add subtask
 - `s` - Sort tasks
 - `l` - Show a list of task lists and switch or create a list
 - `q` - Quit
