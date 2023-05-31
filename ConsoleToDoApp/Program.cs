@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace ConsoleToDoApp
@@ -24,7 +25,7 @@ namespace ConsoleToDoApp
             TaskManager taskManager = new TaskManager();
             ShowWelcomeScreen();
 
-            TaskManager.LoadTasksFromFile();
+            LoadTasksFromFile();
 
             while (true)
             {
@@ -414,10 +415,25 @@ namespace ConsoleToDoApp
             }
         }
 
+        public static void LoadTasksFromFile()
+        {
+            if (File.Exists("tasks.json"))
+            {
+                string json = File.ReadAllText("tasks.json");
+                taskLists = JsonConvert.DeserializeObject<Dictionary<string, List<Task>>>(json);
+            }
+            tasks = taskLists.ContainsKey(currentList) ? taskLists[currentList] : new List<Task>();
+        }
+
+        public static void SaveTasksToFile()
+        {
+            taskLists[currentList] = tasks;
+            string json = JsonConvert.SerializeObject(taskLists);
+            File.WriteAllText("tasks.json", json);
+        }
 
 
 
-       
 
 
     }
