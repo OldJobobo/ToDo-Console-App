@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+
 namespace ConsoleToDoApp
 {
-    public  class TaskManager
+    public class TaskManager
     {
-        public static List<Task> Tasks { get; set; }
+       // public static List<Task> Tasks { get; set; }
 
-        public  TaskManager()
+        public TaskManager()
         {
-            Tasks = new List<Task>();
+           // Tasks = new List<Task>();
         }
 
         public void AddTask()
@@ -83,8 +84,8 @@ namespace ConsoleToDoApp
                 DueDate = dueDate,
                 IsComplete = false
             };
-            Tasks.Add(newTask);
-            SaveTasksToFile();
+            TaskListManager.tasks.Add(newTask);
+            TaskListManager.SaveTasksToFile();
             Console.WriteLine("\nTask added successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ResetColor();
@@ -97,7 +98,7 @@ namespace ConsoleToDoApp
             Console.Clear();
             Console.WriteLine("Edit a task:\n");
 
-            if (Tasks.Count == 0)
+            if (TaskListManager.tasks.Count == 0)
             {
                 Console.WriteLine("No tasks available to edit.");
                 Console.WriteLine("Press any key to return to the main menu.");
@@ -108,8 +109,8 @@ namespace ConsoleToDoApp
             int taskIndex;
             while (true)
             {
-                Console.Write("Enter the task number you want to edit (1 to {0}): ", Tasks.Count);
-                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= Tasks.Count)
+                Console.Write("Enter the task number you want to edit (1 to {0}): ", TaskListManager.tasks.Count);
+                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
                     taskIndex--; // Convert to zero-based index
                     break;
@@ -117,7 +118,7 @@ namespace ConsoleToDoApp
                 Console.WriteLine("Invalid input. Please try again.");
             }
 
-            Task selectedTask = Tasks[taskIndex];
+            Task selectedTask = TaskListManager.tasks[taskIndex];
 
             Console.Write($"Task name ({selectedTask.Name}): ");
             string taskName = Console.ReadLine();
@@ -163,7 +164,7 @@ namespace ConsoleToDoApp
                 Console.WriteLine("Invalid date format. Please try again.");
             }
             selectedTask.DueDate = dueDate;
-            SaveTasksToFile();
+            TaskListManager.SaveTasksToFile();
             Console.WriteLine("\nTask updated successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
@@ -175,7 +176,7 @@ namespace ConsoleToDoApp
             Console.Clear();
             Console.WriteLine("Delete a task:\n");
 
-            if (Tasks.Count == 0)
+            if (TaskListManager.tasks.Count == 0)
             {
                 Console.WriteLine("No tasks available to delete.");
                 Console.WriteLine("Press any key to return to the main menu.");
@@ -186,8 +187,8 @@ namespace ConsoleToDoApp
             int taskIndex;
             while (true)
             {
-                Console.Write("Enter the task number you want to delete (1 to {0}): ", Tasks.Count);
-                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= Tasks.Count)
+                Console.Write("Enter the task number you want to delete (1 to {0}): ", TaskListManager.tasks.Count);
+                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
                     taskIndex--; // Convert to zero-based index
                     break;
@@ -195,7 +196,7 @@ namespace ConsoleToDoApp
                 Console.WriteLine("Invalid input. Please try again.");
             }
 
-            Task selectedTask = Tasks[taskIndex];
+            Task selectedTask = TaskListManager.tasks[taskIndex];
 
             Console.WriteLine($"You have selected the task: {selectedTask.Name}");
             Console.Write("Are you sure you want to delete this task? (y/n): ");
@@ -204,8 +205,8 @@ namespace ConsoleToDoApp
 
             if (confirmation == 'y')
             {
-                Tasks.RemoveAt(taskIndex);
-                SaveTasksToFile();
+                TaskListManager.tasks.RemoveAt(taskIndex);
+                TaskListManager.SaveTasksToFile();
                 Console.WriteLine("Task deleted successfully!");
             }
             else
@@ -223,7 +224,7 @@ namespace ConsoleToDoApp
             Console.Clear();
             Console.WriteLine("Mark a task as complete:\n");
 
-            if (Tasks.Count == 0)
+            if (TaskListManager.tasks.Count == 0)
             {
                 Console.WriteLine("No tasks available to mark as complete.");
                 Console.WriteLine("Press any key to return to the main menu.");
@@ -234,8 +235,8 @@ namespace ConsoleToDoApp
             int taskIndex;
             while (true)
             {
-                Console.Write("Enter the task number you want to mark as complete (1 to {0}): ", Tasks.Count);
-                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= Tasks.Count)
+                Console.Write("Enter the task number you want to mark as complete (1 to {0}): ", TaskListManager.tasks.Count);
+                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
                     taskIndex--; // Convert to zero-based index
                     break;
@@ -243,7 +244,7 @@ namespace ConsoleToDoApp
                 Console.WriteLine("Invalid input. Please try again.");
             }
 
-            Task selectedTask = Tasks[taskIndex];
+            Task selectedTask = TaskListManager.tasks[taskIndex];
 
             if (selectedTask.IsComplete)
             {
@@ -252,7 +253,7 @@ namespace ConsoleToDoApp
             else
             {
                 selectedTask.IsComplete = true;
-                SaveTasksToFile();
+                TaskListManager.SaveTasksToFile();
                 Console.WriteLine("Task marked as complete!");
             }
 
@@ -260,21 +261,29 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
-        public static void LoadTasksFromFile()
+        public void AddSubtask()
         {
-            if (File.Exists("tasks.json"))
+            Console.Clear();
+            TaskListManager.ShowTasks();
+
+            Console.Write("Enter the task number to add a subtask: ");
+            int taskNumber = int.Parse(Console.ReadLine()) - 1;
+            if (taskNumber < 0 || taskNumber >= TaskListManager.tasks.Count)
             {
-                string json = File.ReadAllText("tasks.json");
-                taskLists = JsonConvert.DeserializeObject<Dictionary<string, List<Task>>>(json);
+                Console.WriteLine("Invalid task number.");
+                return;
             }
-            tasks = taskLists.ContainsKey(currentList) ? taskLists[currentList] : new List<Task>();
+
+            Task parentTask = TaskListManager.tasks[taskNumber];
+
+            Console.Write("Enter the subtask name: ");
+            string subtaskName = Console.ReadLine();
+
+            SubTask newSubtask = new SubTask { Name = subtaskName, IsComplete = false };
+            parentTask.SubTasks.Add(newSubtask);
+
+            TaskListManager.SaveTasksToFile();
         }
 
-        public void SaveTasksToFile()
-        {
-            taskLists[currentList] = tasks;
-            string json = JsonConvert.SerializeObject(taskLists);
-            File.WriteAllText("tasks.json", json);
-        }
     }
 }

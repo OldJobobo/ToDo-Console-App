@@ -19,5 +19,12 @@ namespace ConsoleToDoApp
         public TaskCategory Category { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsComplete { get; set; }
+
+        public List<SubTask> SubTasks { get; set; }
+
+        public Task()
+        {
+            SubTasks = new List<SubTask>();
+        }
     }
 }
