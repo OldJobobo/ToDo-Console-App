@@ -9,13 +9,10 @@ namespace ConsoleToDoApp
     public  class TaskManager
     {
         public static List<Task> Tasks { get; set; }
-        
 
         public  TaskManager()
         {
             Tasks = new List<Task>();
-          
-
         }
 
         public void AddTask()
@@ -87,7 +84,7 @@ namespace ConsoleToDoApp
                 IsComplete = false
             };
             Tasks.Add(newTask);
-            Program.SaveTasksToFile();
+            SaveTasksToFile();
             Console.WriteLine("\nTask added successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ResetColor();
@@ -166,7 +163,7 @@ namespace ConsoleToDoApp
                 Console.WriteLine("Invalid date format. Please try again.");
             }
             selectedTask.DueDate = dueDate;
-            Program.SaveTasksToFile();
+            SaveTasksToFile();
             Console.WriteLine("\nTask updated successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
@@ -208,7 +205,7 @@ namespace ConsoleToDoApp
             if (confirmation == 'y')
             {
                 Tasks.RemoveAt(taskIndex);
-                Program.SaveTasksToFile();
+                SaveTasksToFile();
                 Console.WriteLine("Task deleted successfully!");
             }
             else
@@ -255,7 +252,7 @@ namespace ConsoleToDoApp
             else
             {
                 selectedTask.IsComplete = true;
-                Program.SaveTasksToFile();
+                SaveTasksToFile();
                 Console.WriteLine("Task marked as complete!");
             }
 
@@ -263,6 +260,21 @@ namespace ConsoleToDoApp
             Console.ReadKey();
         }
 
-       
+        public static void LoadTasksFromFile()
+        {
+            if (File.Exists("tasks.json"))
+            {
+                string json = File.ReadAllText("tasks.json");
+                taskLists = JsonConvert.DeserializeObject<Dictionary<string, List<Task>>>(json);
+            }
+            tasks = taskLists.ContainsKey(currentList) ? taskLists[currentList] : new List<Task>();
+        }
+
+        public void SaveTasksToFile()
+        {
+            taskLists[currentList] = tasks;
+            string json = JsonConvert.SerializeObject(taskLists);
+            File.WriteAllText("tasks.json", json);
+        }
     }
 }
