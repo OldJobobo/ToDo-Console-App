@@ -26,14 +26,20 @@ namespace ConsoleToDoApp
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("Task name: ");
+                Console.Write("Task name (type 'cancel' to cancel): ");
                 taskName = Console.ReadLine();
+
+                if (string.Equals(taskName, "cancel", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Task addition canceled.");
+                    return;
+                }
 
                 if (string.IsNullOrEmpty(taskName)) // Check if the task name is empty or consists only of whitespace
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Task name cannot be blank. Press any key to return to the main menu.");
-
+                    Console.WriteLine("Task name cannot be blank. Please try again.");
+                    Console.ResetColor();
                 }
                 else
                 {
@@ -41,22 +47,28 @@ namespace ConsoleToDoApp
                     break;
                 }
             }
+
             TaskCategory taskCategory;
             while (true)
             {
-                Console.Write("Task category (N - Normal, I - Important, U - Urgent): ");
-                char categoryInput = char.ToUpper(Console.ReadKey().KeyChar);
-                Console.WriteLine();
+                Console.Write("Task category (N - Normal, I - Important, U - Urgent, type 'cancel' to cancel): ");
+                string categoryInput = Console.ReadLine();
 
-                switch (categoryInput)
+                if (string.Equals(categoryInput, "cancel", StringComparison.OrdinalIgnoreCase))
                 {
-                    case 'N':
+                    Console.WriteLine("Task addition canceled.");
+                    return;
+                }
+
+                switch (categoryInput.ToUpper())
+                {
+                    case "N":
                         taskCategory = TaskCategory.Normal;
                         break;
-                    case 'I':
+                    case "I":
                         taskCategory = TaskCategory.Important;
                         break;
-                    case 'U':
+                    case "U":
                         taskCategory = TaskCategory.Urgent;
                         break;
                     default:
@@ -69,8 +81,16 @@ namespace ConsoleToDoApp
             DateTime dueDate;
             while (true)
             {
-                Console.Write("Due date (MM-DD-YYYY): ");
-                if (DateTime.TryParseExact(Console.ReadLine(), "MM-dd-yyyy", null, System.Globalization.DateTimeStyles.None, out dueDate))
+                Console.Write("Due date (MM-DD-YYYY, type 'cancel' to cancel): ");
+                string dateInput = Console.ReadLine();
+
+                if (string.Equals(dateInput, "cancel", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Task addition canceled.");
+                    return;
+                }
+
+                if (DateTime.TryParseExact(dateInput, "MM-dd-yyyy", null, System.Globalization.DateTimeStyles.None, out dueDate))
                 {
                     break;
                 }
@@ -91,6 +111,7 @@ namespace ConsoleToDoApp
             Console.ResetColor();
             Console.ReadKey();
         }
+
 
 
         public void EditTask()
@@ -187,6 +208,7 @@ namespace ConsoleToDoApp
             int taskIndex;
             while (true)
             {
+                TaskListManager.ShowTasks();
                 Console.Write("Enter the task number you want to delete (1 to {0}): ", TaskListManager.tasks.Count);
                 if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
@@ -235,6 +257,7 @@ namespace ConsoleToDoApp
             int taskIndex;
             while (true)
             {
+                TaskListManager.ShowTasks();
                 Console.Write("Enter the task number you want to mark as complete (1 to {0}): ", TaskListManager.tasks.Count);
                 if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
