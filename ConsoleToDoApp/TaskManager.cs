@@ -117,6 +117,8 @@ namespace ConsoleToDoApp
         public void EditTask()
         {
             Console.Clear();
+            TaskListManager.ShowTasks();
+
             Console.WriteLine("Edit a task:\n");
 
             if (TaskListManager.tasks.Count == 0)
@@ -126,6 +128,8 @@ namespace ConsoleToDoApp
                 Console.ReadKey();
                 return;
             }
+
+
 
             int taskIndex;
             while (true)
