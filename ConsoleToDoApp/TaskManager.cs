@@ -130,8 +130,16 @@ namespace ConsoleToDoApp
             int taskIndex;
             while (true)
             {
-                Console.Write("Enter the task number you want to edit (1 to {0}): ", TaskListManager.tasks.Count);
-                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
+                Console.Write("Enter the task number you want to edit (1 to {0}, type 'cancel' to cancel): ", TaskListManager.tasks.Count);
+                string taskIndexInput = Console.ReadLine();
+
+                if (string.Equals(taskIndexInput, "cancel", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Task edit canceled.");
+                    return;
+                }
+
+                if (int.TryParse(taskIndexInput, out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
                     taskIndex--; // Convert to zero-based index
                     break;
@@ -141,8 +149,28 @@ namespace ConsoleToDoApp
 
             Task selectedTask = TaskListManager.tasks[taskIndex];
 
-            Console.Write($"Task name ({selectedTask.Name}): ");
+            // Create a copy of the task
+            Task originalTask = new Task
+            {
+                Name = selectedTask.Name,
+                Category = selectedTask.Category,
+                DueDate = selectedTask.DueDate,
+                IsComplete = selectedTask.IsComplete,
+                SubTasks = new List<SubTask>(selectedTask.SubTasks)
+            };
+
+            Console.Write($"Task name ({selectedTask.Name}, type 'cancel' to cancel): ");
             string taskName = Console.ReadLine();
+            if (string.Equals(taskName, "cancel", StringComparison.OrdinalIgnoreCase))
+            {
+                selectedTask.Name = originalTask.Name;
+                selectedTask.Category = originalTask.Category;
+                selectedTask.DueDate = originalTask.DueDate;
+                selectedTask.IsComplete = originalTask.IsComplete;
+                selectedTask.SubTasks = originalTask.SubTasks;
+                Console.WriteLine("Task edit canceled.");
+                return;
+            }
             if (!string.IsNullOrEmpty(taskName))
             {
                 selectedTask.Name = taskName;
@@ -151,19 +179,29 @@ namespace ConsoleToDoApp
             TaskCategory taskCategory;
             while (true)
             {
-                Console.Write($"Task category ({selectedTask.Category}) (N - Normal, I - Important, U - Urgent): ");
-                char categoryInput = char.ToUpper(Console.ReadKey().KeyChar);
-                Console.WriteLine();
+                Console.Write($"Task category ({selectedTask.Category}) (N - Normal, I - Important, U - Urgent, type 'cancel' to cancel): ");
+                string categoryInput = Console.ReadLine();
 
-                switch (categoryInput)
+                if (string.Equals(categoryInput, "cancel", StringComparison.OrdinalIgnoreCase))
                 {
-                    case 'N':
+                    selectedTask.Name = originalTask.Name;
+                    selectedTask.Category = originalTask.Category;
+                    selectedTask.DueDate = originalTask.DueDate;
+                    selectedTask.IsComplete = originalTask.IsComplete;
+                    selectedTask.SubTasks = originalTask.SubTasks;
+                    Console.WriteLine("Task edit canceled.");
+                    return;
+                }
+
+                switch (categoryInput.ToUpper())
+                {
+                    case "N":
                         taskCategory = TaskCategory.Normal;
                         break;
-                    case 'I':
+                    case "I":
                         taskCategory = TaskCategory.Important;
                         break;
-                    case 'U':
+                    case "U":
                         taskCategory = TaskCategory.Urgent;
                         break;
                     default:
@@ -177,19 +215,35 @@ namespace ConsoleToDoApp
             DateTime dueDate;
             while (true)
             {
-                Console.Write($"Due date ({selectedTask.DueDate.ToString("MM-dd-yyyy")}): ");
-                if (DateTime.TryParseExact(Console.ReadLine(), "MM-dd-yyyy", null, System.Globalization.DateTimeStyles.None, out dueDate))
+                Console.Write($"Due date ({selectedTask.DueDate.ToString("MM-dd-yyyy")}, type 'cancel' to cancel): ");
+                string dateInput = Console.ReadLine();
+
+                if (string.Equals(dateInput, "cancel", StringComparison.OrdinalIgnoreCase))
+                {
+                    selectedTask.Name = originalTask.Name;
+                    selectedTask.Category = originalTask.Category;
+                    selectedTask.DueDate = originalTask.DueDate;
+                    selectedTask.IsComplete = originalTask.IsComplete;
+                    selectedTask.SubTasks = originalTask.SubTasks;
+                    Console.WriteLine("Task edit canceled.");
+                    return;
+                }
+
+                if (DateTime.TryParseExact(dateInput, "MM-dd-yyyy", null, System.Globalization.DateTimeStyles.None, out dueDate))
                 {
                     break;
                 }
                 Console.WriteLine("Invalid date format. Please try again.");
             }
             selectedTask.DueDate = dueDate;
+
             TaskListManager.SaveTasksToFile();
             Console.WriteLine("\nTask updated successfully!");
             Console.WriteLine("Press any key to return to the main menu.");
+            Console.ResetColor();
             Console.ReadKey();
         }
+
 
 
         public void DeleteTask()
