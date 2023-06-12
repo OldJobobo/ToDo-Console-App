@@ -26,8 +26,9 @@ namespace ConsoleToDoApp
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("Task name (type 'cancel' to cancel): ");
+                Console.Write("Task name (type 'cancel' to cancel, max 25 characters): ");
                 taskName = Console.ReadLine();
+
 
                 if (string.Equals(taskName, "cancel", StringComparison.OrdinalIgnoreCase))
                 {
@@ -41,12 +42,19 @@ namespace ConsoleToDoApp
                     Console.WriteLine("Task name cannot be blank. Please try again.");
                     Console.ResetColor();
                 }
+                else if (taskName.Length > 25) // Check if the task name is longer than 25 characters
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Task name cannot be longer than 25 characters. Please try again.");
+                    Console.ResetColor();
+                }
                 else
                 {
                     Console.ResetColor();
                     break;
                 }
             }
+
 
             TaskCategory taskCategory;
             while (true)
