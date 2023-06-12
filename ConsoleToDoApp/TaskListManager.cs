@@ -234,6 +234,12 @@ namespace ConsoleToDoApp
             
         }
 
+        public static List<string> GetOtherTaskLists()
+        {
+            return taskLists.Keys.Where(key => key != currentList).ToList();
+        }
+
+
         public static void LoadTasksFromFile()
         {
             if (File.Exists("tasks.json"))

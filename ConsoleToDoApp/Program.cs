@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -82,7 +83,7 @@ namespace ConsoleToDoApp
             Console.ReadLine();
         }
 
-        
+
 
 
         static void ShowMainMenu()
@@ -92,19 +93,16 @@ namespace ConsoleToDoApp
             DrawTitleBar();
 
             Console.ForegroundColor = ColorScheme.titleColor;
-            //Console.WriteLine("ToDo List Manager - Main Menu\n");
             Console.ResetColor();
 
-
             TaskListManager.ShowTasks();
+            ShowOtherTaskLists();
             ShowTasksDueToday();
 
             ConsoleColor commandKeyColor = ConsoleColor.Yellow;
             ConsoleColor commandDescriptionColor = ConsoleColor.Green;
-           
-
             Console.ResetColor();
-            
+
             DisplayStatusBar();
         }
 
@@ -222,6 +220,30 @@ namespace ConsoleToDoApp
         {
             DateTime today = DateTime.Today;
             return TaskListManager.tasks.Where(task => task.DueDate.Date == today).ToList();
+        }
+
+
+        private static void ShowOtherTaskLists()
+        {
+            // These numbers need to be adjusted according to your screen width
+            int windowWidth = Console.WindowWidth;
+            int middleColumnStart = windowWidth / 2;
+
+            Console.SetCursorPosition(middleColumnStart, 2);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Other Task Lists:");
+            Console.ResetColor();
+
+            // Here we use a static method from TaskListManager to get other task lists
+            List<string> otherTaskLists = TaskListManager.GetOtherTaskLists();
+
+            foreach (string taskListName in otherTaskLists)
+            {
+                Console.SetCursorPosition(middleColumnStart, Console.CursorTop + 1);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(taskListName);
+                Console.ResetColor();
+            }
         }
 
 

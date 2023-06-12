@@ -358,11 +358,11 @@ namespace ConsoleToDoApp
         public void UncompleteTask()
         {
             Console.Clear();
-            Console.WriteLine("Unmark a task as complete:\n");
+            Console.WriteLine("Mark a task as incomplete:\n");
 
             if (TaskListManager.tasks.Count == 0)
             {
-                Console.WriteLine("No tasks available to unmark as complete.");
+                Console.WriteLine("No tasks available to mark as incomplete.");
                 Console.WriteLine("Press any key to return to the main menu.");
                 Console.ReadKey();
                 return;
@@ -372,7 +372,7 @@ namespace ConsoleToDoApp
             while (true)
             {
                 TaskListManager.ShowTasks();
-                Console.Write("Enter the task number you want to unmark as complete (1 to {0}): ", TaskListManager.tasks.Count);
+                Console.Write("Enter the task number you want to mark as incomplete (1 to {0}): ", TaskListManager.tasks.Count);
                 if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
                 {
                     taskIndex--; // Convert to zero-based index
