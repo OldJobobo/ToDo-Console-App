@@ -340,13 +340,71 @@ namespace ConsoleToDoApp
             else
             {
                 selectedTask.IsComplete = true;
+
+                // If a task is marked as complete, all its subtasks are marked as complete
+                foreach (SubTask subtask in selectedTask.SubTasks)
+                {
+                    subtask.IsComplete = true;
+                }
+
                 TaskListManager.SaveTasksToFile();
-                Console.WriteLine("Task marked as complete!");
+                Console.WriteLine("Task and its subtasks marked as complete!");
             }
 
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
         }
+
+        public void UncompleteTask()
+        {
+            Console.Clear();
+            Console.WriteLine("Unmark a task as complete:\n");
+
+            if (TaskListManager.tasks.Count == 0)
+            {
+                Console.WriteLine("No tasks available to unmark as complete.");
+                Console.WriteLine("Press any key to return to the main menu.");
+                Console.ReadKey();
+                return;
+            }
+
+            int taskIndex;
+            while (true)
+            {
+                TaskListManager.ShowTasks();
+                Console.Write("Enter the task number you want to unmark as complete (1 to {0}): ", TaskListManager.tasks.Count);
+                if (int.TryParse(Console.ReadLine(), out taskIndex) && taskIndex >= 1 && taskIndex <= TaskListManager.tasks.Count)
+                {
+                    taskIndex--; // Convert to zero-based index
+                    break;
+                }
+                Console.WriteLine("Invalid input. Please try again.");
+            }
+
+            Task selectedTask = TaskListManager.tasks[taskIndex];
+
+            if (!selectedTask.IsComplete)
+            {
+                Console.WriteLine("This task is already marked as incomplete.");
+            }
+            else
+            {
+                selectedTask.IsComplete = false;
+
+                // If a task is unmarked as complete, all its subtasks are also unmarked as complete
+                foreach (SubTask subtask in selectedTask.SubTasks)
+                {
+                    subtask.IsComplete = false;
+                }
+
+                TaskListManager.SaveTasksToFile();
+                Console.WriteLine("Task and its subtasks marked as incomplete!");
+            }
+
+            Console.WriteLine("Press any key to return to the main menu.");
+            Console.ReadKey();
+        }
+
 
         public void AddSubtask()
         {

@@ -49,6 +49,9 @@ namespace ConsoleToDoApp
                     case 'x':
                         TaskListManager.DeleteTaskList();
                         break;
+                    case 'v':
+                        taskManager.UncompleteTask();
+                        break;
                     case 'q':
                         return;
                     default:
