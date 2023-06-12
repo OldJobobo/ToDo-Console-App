@@ -78,16 +78,22 @@ namespace ConsoleToDoApp
                 break;
             }
 
-            DateTime dueDate;
+           DateTime dueDate = DateTime.Now;  // Default value for due date
             while (true)
             {
-                Console.Write("Due date (MM-DD-YYYY, type 'cancel' to cancel): ");
+                Console.Write($"Due date (MM-DD-YYYY, default is today's date - {dueDate.ToString("MM-dd-yyyy")}): ");
                 string dateInput = Console.ReadLine();
 
                 if (string.Equals(dateInput, "cancel", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine("Task addition canceled.");
                     return;
+                }
+
+                // If the user just presses enter without typing anything, keep the default date
+                if (string.IsNullOrEmpty(dateInput))
+                {
+                    break;
                 }
 
                 if (DateTime.TryParseExact(dateInput, "MM-dd-yyyy", null, System.Globalization.DateTimeStyles.None, out dueDate))
