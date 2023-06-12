@@ -26,5 +26,17 @@ namespace ConsoleToDoApp
         {
             SubTasks = new List<SubTask>();
         }
+
+        public void CompleteTaskAndSubTasks()
+        {
+            IsComplete = true;
+            foreach (SubTask subtask in SubTasks)
+            {
+                subtask.IsComplete = true;
+            }
+        }
+
+
+
     }
 }

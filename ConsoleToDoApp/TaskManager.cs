@@ -9,11 +9,11 @@ namespace ConsoleToDoApp
 {
     public class TaskManager
     {
-       // public static List<Task> Tasks { get; set; }
+       
 
         public TaskManager()
         {
-           // Tasks = new List<Task>();
+          
         }
 
         public void AddTask()
@@ -347,21 +347,49 @@ namespace ConsoleToDoApp
             }
             else
             {
-                selectedTask.IsComplete = true;
-
-                // If a task is marked as complete, all its subtasks are marked as complete
-                foreach (SubTask subtask in selectedTask.SubTasks)
+                if (selectedTask.SubTasks.Count > 0)
                 {
-                    subtask.IsComplete = true;
+                    Console.Write("This task has subtasks. Do you want to mark all subtasks as complete as well? (y/n): ");
+                    char input = char.ToLower(Console.ReadKey().KeyChar);
+                    Console.WriteLine();
+                    if (input == 'y')
+                    {
+                        selectedTask.CompleteTaskAndSubTasks();
+                        Console.WriteLine("Task and its subtasks marked as complete!");
+                    }
+                    else if (input == 'n')
+                    {
+                        Console.Write("Enter the subtask number you want to mark as complete (1 to {0}): ", selectedTask.SubTasks.Count);
+                        int subTaskIndex;
+                        if (int.TryParse(Console.ReadLine(), out subTaskIndex) && subTaskIndex >= 1 && subTaskIndex <= selectedTask.SubTasks.Count)
+                        {
+                            subTaskIndex--;
+                            selectedTask.SubTasks[subTaskIndex].IsComplete = true;
+                            Console.WriteLine("Subtask marked as complete!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid subtask number.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Task completion canceled.");
+                    }
+                }
+                else
+                {
+                    selectedTask.IsComplete = true;
+                    Console.WriteLine("Task marked as complete!");
                 }
 
                 TaskListManager.SaveTasksToFile();
-                Console.WriteLine("Task and its subtasks marked as complete!");
             }
 
             Console.WriteLine("Press any key to return to the main menu.");
             Console.ReadKey();
         }
+
 
         public void UncompleteTask()
         {
