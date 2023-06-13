@@ -239,6 +239,19 @@ namespace ConsoleToDoApp
             return taskLists.Keys.Where(key => key != currentList).ToList();
         }
 
+        public static List<Task> TasksDueByDate(DateTime date)
+        {
+            return TaskListManager.tasks
+                .Where(t => t.DueDate.Date == date.Date)
+                .ToList();
+        }
+
+        public static List<Task> TasksDueByDate(DateTime startDate, DateTime endDate)
+        {
+            return TaskListManager.tasks
+                .Where(t => t.DueDate.Date >= startDate.Date && t.DueDate.Date <= endDate.Date)
+                .ToList();
+        }
 
         public static void LoadTasksFromFile()
         {

@@ -97,7 +97,8 @@ namespace ConsoleToDoApp
 
             TaskListManager.ShowTasks();
             ShowOtherTaskLists();
-            ShowTasksDueToday();
+            //ShowTasksDueToday();
+            ShowTasksDueInFuture();
 
             ConsoleColor commandKeyColor = ConsoleColor.Yellow;
             ConsoleColor commandDescriptionColor = ConsoleColor.Green;
@@ -271,10 +272,61 @@ namespace ConsoleToDoApp
             }
         }
 
+        private static void ShowTasksDueInFuture()
+        {
+            List<Task> tasksDueToday = TaskListManager.TasksDueByDate(DateTime.Now);
+            List<Task> tasksDueTomorrow = TaskListManager.TasksDueByDate(DateTime.Now.AddDays(1));
+            List<Task> tasksDueInThreeToFiveDays = TaskListManager.TasksDueByDate(DateTime.Now.AddDays(3), DateTime.Now.AddDays(5));
+
+            int windowWidth = Console.WindowWidth;
+            int columnWidth = 30; // Set the width of the right column, adjusted for possibly longer headers
+            int columnStart = windowWidth - columnWidth - 1;
+            int lineStart = 2; // Adjust this value based on the position of the title bar
+
+            // Tasks due today
+            Console.SetCursorPosition(columnStart, lineStart);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Tasks Due Today:");
+            Console.ResetColor();
+            lineStart = DisplayTasks(columnStart, lineStart, tasksDueToday);
+
+
+            // Blank line
+            lineStart++;
+
+            // Tasks due tomorrow
+            Console.SetCursorPosition(columnStart, ++lineStart);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Tasks Due Tomorrow:");
+            Console.ResetColor();
+            lineStart = DisplayTasks(columnStart, lineStart, tasksDueTomorrow);
+
+            // Blank line
+            lineStart++;
+
+            // Tasks due in 3-5 days
+            Console.SetCursorPosition(columnStart, ++lineStart);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Tasks Due in 3-5 Days:");
+            Console.ResetColor();
+            DisplayTasks(columnStart, lineStart, tasksDueInThreeToFiveDays);
+            
+        }
+
+        private static int DisplayTasks(int columnStart, int lineStart, List<Task> tasks)
+        {
+            foreach (Task task in tasks)
+            {
+                Console.SetCursorPosition(columnStart, ++lineStart);
+                Console.ForegroundColor = task.IsComplete ? ColorScheme.completedColor : ColorScheme.normalColor;
+                Console.WriteLine(task.Name);
+                Console.ResetColor();
+            }
+            return lineStart;
+        }
 
 
 
-       
 
 
     }
